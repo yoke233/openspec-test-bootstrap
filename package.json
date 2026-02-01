@@ -1,6 +1,6 @@
 {
   "name": "openspec-test-bootstrap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bootstrap an OpenSpec workflow schema with change-scoped test-plan/test-cards/test-evidence artifacts.",
   "license": "MIT",
   "type": "module",
