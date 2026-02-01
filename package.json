@@ -1,0 +1,39 @@
+{
+  "name": "openspec-test-bootstrap",
+  "version": "0.1.0",
+  "description": "Bootstrap an OpenSpec workflow schema with change-scoped test-plan/test-cards/test-evidence artifacts.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "openspec-test-bootstrap": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "release:patch": "npm version patch -m \"chore(release): %s\" && npm publish",
+    "release:minor": "npm version minor -m \"chore(release): %s\" && npm publish",
+    "release:major": "npm version major -m \"chore(release): %s\" && npm publish"
+  },
+  "keywords": [
+    "openspec",
+    "workflow",
+    "schema",
+    "bootstrap",
+    "testing"
+  ],
+  "files": [
+    "dist",
+    "templates",
+    "snippets",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

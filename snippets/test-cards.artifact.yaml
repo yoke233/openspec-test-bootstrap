@@ -1,0 +1,10 @@
+  - id: test-cards
+    generates: {{EVIDENCE_DIR}}/test_cards.md
+    description: Structured test cards for this change (drives test code generation)
+    template: test-cards.md
+    instruction: |
+      Create {{EVIDENCE_DIR}}/test_cards.md.
+      Each card must reference at least one CHG-* and RISK-* from test-plan.
+      Cards must be implementable offline and deterministic.
+    requires:
+      - test-plan

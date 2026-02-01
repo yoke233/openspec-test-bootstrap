@@ -1,0 +1,9 @@
+  - id: test-evidence
+    generates: {{EVIDENCE_DIR}}/test_evidence.md
+    description: Evidence collection plan (coverage delta, determinism, offline)
+    template: test-evidence.md
+    instruction: |
+      Create {{EVIDENCE_DIR}}/test_evidence.md as the evidence collection plan.
+      Do not paste huge logs; describe what to collect and where.
+    requires:
+      - test-cards
