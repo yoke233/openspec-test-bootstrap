@@ -13,6 +13,12 @@ npm run build
 node dist/cli.js --projectRoot . --schema my-workflow
 ```
 
+Or via npx:
+
+```bash
+npx @yoke233/openspec-test-bootstrap --projectRoot . --schema my-workflow
+```
+
 ## OpenSpec Resolution (Windows-friendly)
 
 This tool tries (in order):

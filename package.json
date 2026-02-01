@@ -1,8 +1,16 @@
 {
-  "name": "openspec-test-bootstrap",
+  "name": "@yoke233/openspec-test-bootstrap",
   "version": "0.1.1",
   "description": "Bootstrap an OpenSpec workflow schema with change-scoped test-plan/test-cards/test-evidence artifacts.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoke233/openspec-test-bootstrap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yoke233/openspec-test-bootstrap/issues"
+  },
+  "homepage": "https://github.com/yoke233/openspec-test-bootstrap#readme",
   "type": "module",
   "bin": {
     "openspec-test-bootstrap": "dist/cli.js"

@@ -10,6 +10,10 @@ param(
   [string]$Otp,
 
   [Parameter(Mandatory = $false)]
+  [ValidateSet('public', 'restricted')]
+  [string]$Access,
+
+  [Parameter(Mandatory = $false)]
   [switch]$SkipGhRelease,
 
   [Parameter(Mandatory = $false)]
@@ -59,6 +63,11 @@ Assert-Ok (-not [string]::IsNullOrWhiteSpace($origin)) "Missing git remote 'orig
 
 Invoke-Step 'Verify npm auth' { npm whoami | Out-Host }
 
+$pkgName = (node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).name").Trim()
+if ([string]::IsNullOrWhiteSpace($Access) -and $pkgName.StartsWith('@')) {
+  $Access = 'public'
+}
+
 if (-not $SkipTypecheck) {
   Invoke-Step 'Typecheck' { npm run typecheck | Out-Host }
 }
@@ -95,11 +104,10 @@ if ([string]::IsNullOrWhiteSpace($Otp)) {
 }
 
 Invoke-Step 'npm publish' {
-  if ([string]::IsNullOrWhiteSpace($Otp)) {
-    npm publish | Out-Host
-  } else {
-    npm publish --otp $Otp | Out-Host
-  }
+  $args = @('publish')
+  if (-not [string]::IsNullOrWhiteSpace($Access)) { $args += @('--access', $Access) }
+  if (-not [string]::IsNullOrWhiteSpace($Otp)) { $args += @('--otp', $Otp) }
+  npm @args | Out-Host
 }
 
 Write-Host ''
