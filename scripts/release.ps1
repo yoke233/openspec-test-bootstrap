@@ -103,4 +103,9 @@ Invoke-Step 'npm publish' {
 }
 
 Write-Host ''
+if ($DryRun) {
+  Write-Host 'Dry-run complete (no changes made).'
+  exit 0
+}
+
 Write-Host "Done: $tag published"
