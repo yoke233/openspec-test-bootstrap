@@ -11,9 +11,9 @@
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json",
     "prepack": "npm run build",
-    "release:patch": "npm version patch -m \"chore(release): %s\" && npm publish",
-    "release:minor": "npm version minor -m \"chore(release): %s\" && npm publish",
-    "release:major": "npm version major -m \"chore(release): %s\" && npm publish"
+    "release:patch": "pwsh -NoProfile -File scripts/release.ps1 -Bump patch",
+    "release:minor": "pwsh -NoProfile -File scripts/release.ps1 -Bump minor",
+    "release:major": "pwsh -NoProfile -File scripts/release.ps1 -Bump major"
   },
   "keywords": [
     "openspec",
