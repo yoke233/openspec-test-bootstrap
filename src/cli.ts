@@ -189,6 +189,45 @@ function normalizeNewlines(s: string) {
   return s.replace(/\r\n/g, "\n");
 }
 
+function stripTrailingWhitespace(s: string) {
+  return normalizeNewlines(s)
+    .split("\n")
+    .map((line) => line.replace(/[ \t]+$/g, ""))
+    .join("\n");
+}
+
+function indentBlockText(blockText: string, indent: string) {
+  const normalized = stripTrailingWhitespace(blockText).trimEnd();
+  const lines = normalized.split("\n");
+
+  let minIndent: number | null = null;
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const m = line.match(/^[ \t]*/);
+    const n = (m?.[0] || "").length;
+    minIndent = minIndent === null ? n : Math.min(minIndent, n);
+  }
+  const dedent = minIndent ?? 0;
+
+  return lines
+    .map((line) => {
+      if (!line.trim()) return "";
+      return indent + line.slice(dedent);
+    })
+    .join("\n");
+}
+
+function detectListIndent(blockBody: string) {
+  const lines = normalizeNewlines(blockBody).split("\n");
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const m = line.match(/^(\s*)-\s+/);
+    if (m) return m[1] || "";
+    return "";
+  }
+  return null;
+}
+
 async function readTextUtf8(p: string) {
   return normalizeNewlines(await fsp.readFile(p, "utf8"));
 }
@@ -206,9 +245,12 @@ function ensureArtifactBlock(
   if (idRe.test(s)) return s;
 
   const m = s.match(/(^|\n)artifacts:\s*\n([\s\S]*?)(\n[^\s][\w-]*\s*:|\n?$)/);
-  const block = blockText.trimEnd() + "\n";
+  const defaultIndent = "  ";
 
-  if (!m) return s.trimEnd() + "\n\nartifacts:\n" + block + "\n";
+  if (!m) {
+    const block = indentBlockText(blockText, defaultIndent).trimEnd() + "\n";
+    return s.trimEnd() + "\n\nartifacts:\n" + block + "\n";
+  }
 
   const full = m[0];
   const headIdx = s.indexOf(full);
@@ -216,6 +258,9 @@ function ensureArtifactBlock(
   const tail = s.slice(headIdx + full.length);
 
   const artifactsBody = (m[2] || "").trimEnd();
+  const indent =
+    (artifactsBody && detectListIndent(artifactsBody)) ?? defaultIndent;
+  const block = indentBlockText(blockText, indent).trimEnd() + "\n";
   const nextTopLevel = m[3] || "\n";
 
   const newFull =
@@ -351,7 +396,9 @@ async function main() {
   const schemaName = args.schema;
   const forkFrom = args.forkFrom || "spec-driven";
   const tools = (args.tools || "none").trim();
-  const evidenceDir = (args.evidenceDir || "evidence").replace(/\\/g, "/");
+  const evidenceDir = (args.evidenceDir || "evidence")
+    .replace(/\\/g, "/")
+    .replace(/\/+$/g, "");
   const dryRun = !!args.dryRun;
 
   if (!(await pathExists(projectRoot)))

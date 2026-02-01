@@ -1,30 +1,38 @@
-  - id: test-plan
-    generates: {{EVIDENCE_DIR}}/test_plan.md
-    description: Test plan and coverage map for this change
-    template: test-plan.md
-    instruction: |
-      Create {{EVIDENCE_DIR}}/test_plan.md as PR acceptance evidence.
-      This is PLAN ONLY. Do not write test code here.
+- id: test-plan
+  generates: {{EVIDENCE_DIR}}/test_plan.md
+  description: Change-scoped test plan (PR evidence)
+  template: test-plan.md
+  instruction: |
+    Create {{EVIDENCE_DIR}}/test_plan.md as PR acceptance evidence.
+    This is PLAN ONLY. Do not write test code here.
 
-      Scope lock:
-      - Only cover code paths introduced/modified in this change and directly impacted regression surface.
-      - Identify affected modules/interfaces first and rank by risk.
+    Scope lock:
+    - Only cover code paths introduced/modified in this change and directly impacted regression surface.
+    - Identify affected modules/interfaces first and rank by risk.
 
-      Hard constraints:
-      - One command to run all tests.
-      - Must run offline by default (no external network dependencies).
-      - If an external-only dependency exists: isolate it behind an adapter and provide an offline substitute (mock/fixture/fake server).
-      - Any online-only tests must be clearly labeled, opt-in, and NOT required for PR evidence.
-      - Coverage must improve; provide before/after values.
-      - Per impacted module: at least 1 normal + 2 boundary + 2 error cases.
-      - Avoid flaky tests: fix time, timezone, and random seed.
+    Hard constraints:
+    - One command to run all tests.
+    - Must run offline by default (no external network dependencies).
+    - If an external-only dependency exists: isolate it behind an adapter and provide an offline substitute (mock/fixture/fake server).
+    - Any online-only tests must be clearly labeled, opt-in, and NOT required for PR evidence.
+    - Coverage must improve; otherwise explain why and provide alternative evidence.
+    - Per impacted module: at least 1 normal + 2 boundary + 2 error cases.
+    - Avoid flaky tests: fix time, timezone, and random seed.
 
-      Output order:
-      1) Change fingerprint (BASE_REF, HEAD_SHA, DIFF_CMD)
-      2) Coverage map
-      3) Test cards summary (or reference test-cards)
-      4) Run command + coverage before/after
-      5) Trace matrix (change -> tests -> risks)
-    requires:
-      - specs
-      - design
+    Required fields must not be empty:
+    - BASE_REF, HEAD_SHA, DIFF_CMD
+    - TEST_CMD
+    - Coverage before/after (or an explicit explanation why unavailable)
+
+    Exceptions:
+    - If there are no exceptions, explicitly write "none" in the Exceptions section.
+
+    Output order:
+    1) Change fingerprint (BASE_REF, HEAD_SHA, DIFF_CMD)
+    2) Coverage map
+    3) Test cards (titles only)
+    4) Evidence (run command + coverage before/after)
+    5) Trace matrix (change -> tests -> risks)
+  requires:
+    - specs
+    - design
